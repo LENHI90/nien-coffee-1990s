@@ -3073,7 +3073,7 @@
         <div class="bg-nien-cream-card rounded-2xl border-2 border-nien-wood/50 p-4 shadow-sm hover:shadow-vintage hover:-translate-y-1 transition-all flex flex-col justify-between group">
           <div>
             <div class="relative rounded-xl overflow-hidden aspect-[4/3] bg-nien-beige/40 mb-3 border border-nien-wood/30">
-              <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              <img src="${item.img}" alt="${item.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
               <span class="absolute top-2 left-2 ${badgeColor} text-[10px] font-bold px-2 py-0.5 rounded shadow-sm border">
                 ${item.badge}
               </span>
@@ -4951,5 +4951,28 @@
       initTableFromURL();
     });
   </script>
+
+  <!-- THANH ĐIỀU HƯỚNG NHANH 4 CHẾ ĐỘ TRẢI NGHIỆM NIÊN COFFEE -->
+  <aside id="quickDemoBar" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-[#2B170E]/95 text-amber-100 backdrop-blur-md px-3 py-2 rounded-2xl shadow-2xl border-2 border-amber-500/60 flex items-center gap-2 text-xs font-bold max-w-[95vw] overflow-x-auto" aria-label="Demo Bar">
+    <span class="hidden sm:inline-flex items-center gap-1 text-[11px] text-amber-300 pr-2 border-r border-amber-500/40 uppercase tracking-wider font-mono">
+      ☕ Chuyển Màn:
+    </span>
+    <a href="index.html" class="bg-white/10 hover:bg-white/20 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 whitespace-nowrap text-amber-100" title="Trang chủ khách hàng vãng lai">
+      <span>🏠 Khách Vãng Lai</span>
+    </a>
+    <a href="index.html?ban=03" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm whitespace-nowrap" title="Mô phỏng khách đến quán quét mã QR tại Bàn 03">
+      <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+      <span>📱 Quét Bàn 03</span>
+    </a>
+    <a href="admin.html" target="_blank" class="bg-emerald-700 hover:bg-emerald-600 text-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm whitespace-nowrap" title="Mở Màn hình 5: KDS Barista & Quản lý thu ngân">
+      <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+      <span>⚙️ KDS Barista</span>
+    </a>
+    <a href="stitch.html" target="_blank" class="bg-amber-700 hover:bg-amber-600 text-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm whitespace-nowrap" title="Xem 4 màn hình Stitch bạn đã thiết kế">
+      <i data-lucide="palette" class="w-3.5 h-3.5"></i>
+      <span>🎨 Bản Vẽ Stitch</span>
+    </a>
+  </aside>
+
 </body>
 </html>
