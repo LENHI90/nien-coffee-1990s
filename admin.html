@@ -77,6 +77,35 @@
 </head>
 
 <body class="font-sans-viet min-h-screen flex flex-col selection:bg-nien-caramel selection:text-white">
+  <!-- MÀN HÌNH BẢO MẬT MÃ PIN NỘI BỘ (DÀNH CHO QUẢN LÝ / BARISTA) -->
+  <div id="adminPinScreen" class="fixed inset-0 z-50 bg-[#2B170E] flex items-center justify-center p-4">
+    <div class="bg-[#FAF6F0] p-6 sm:p-8 rounded-2xl border-4 border-[#8C6339] max-w-sm w-full shadow-2xl text-center space-y-4">
+      <div class="w-14 h-14 mx-auto rounded-full bg-nien-espresso text-amber-300 flex items-center justify-center text-2xl border-2 border-amber-400">
+        🔐
+      </div>
+      <div>
+        <h2 class="font-serif-retro text-2xl font-black text-nien-espresso uppercase">Cổng Vận Hành Nội Bộ</h2>
+        <p class="text-xs text-nien-wood mt-1">Dành riêng cho Quản lý & Barista pha chế Niên Coffee</p>
+      </div>
+      <div class="space-y-2 text-left">
+        <label class="block text-xs font-bold text-nien-espresso">Mã PIN Quản Trị:</label>
+        <input type="password" id="adminPinInput" maxlength="6" placeholder="Nhập PIN (1990)" 
+               onkeydown="if(event.key==='Enter') checkAdminPin()"
+               class="w-full text-center text-xl tracking-widest font-mono font-bold py-2.5 px-4 rounded-xl border-2 border-nien-espresso bg-white focus:outline-none focus:border-nien-caramel">
+        <p class="text-[11px] text-amber-800 text-center italic font-mono">Mã PIN mặc định: <strong>1990</strong></p>
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="checkAdminPin()" class="flex-1 bg-nien-espresso hover:bg-nien-caramel text-amber-100 font-bold py-2.5 px-4 rounded-xl border border-nien-wood transition text-xs shadow-vintage-sm">
+          Đăng Nhập Vận Hành
+        </button>
+        <a href="index.html" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center">
+          Về Quán
+        </a>
+      </div>
+      <p id="adminPinError" class="hidden text-xs text-rose-700 font-bold">Mã PIN không đúng. Vui lòng nhập 1990!</p>
+    </div>
+  </div>
+
 
   <!-- TOP HEADER QUẢN TRỊ -->
   <header class="sticky top-0 z-50 bg-nien-espresso text-nien-beige border-b-2 border-nien-wood shadow-md">
@@ -110,10 +139,7 @@
           <span>Thử Chuông Ting Ting</span>
         </button>
 
-        <a href="stitch.html" target="_blank" class="bg-amber-700 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg border border-amber-400 flex items-center gap-1.5 font-bold transition text-xs shadow-sm">
-          <i data-lucide="palette" class="w-3.5 h-3.5"></i>
-          <span>Xem Bản Vẽ Stitch</span>
-        </a>
+        <button onclick="lockAdminScreen()" class="bg-rose-900/80 hover:bg-rose-800 text-rose-100 px-3 py-1.5 rounded-lg border border-rose-500/50 flex items-center gap-1.5 font-bold transition text-xs shadow-sm" title="Lock Screen"><i data-lucide="lock" class="w-3.5 h-3.5"></i><span>Khoa Man Hinh</span></button>
         <a href="index.html" target="_blank" class="bg-nien-moss hover:bg-nien-moss-hover text-white px-3.5 py-1.5 rounded-lg border border-emerald-400 flex items-center gap-1.5 font-bold transition text-xs shadow-sm">
           <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
           <span>Mở Trang Khách Hàng</span>
@@ -914,6 +940,35 @@
     }
 
     // ==================== KHỞI CHẠY ====================
+        // ==================== BẢO MẬT MÃ PIN NỘI BỘ (1990) ====================
+    function checkAdminPin() {
+      const pin = document.getElementById("adminPinInput").value.trim();
+      if (pin === "1990") {
+        sessionStorage.setItem("nien_admin_auth", "true");
+        document.getElementById("adminPinScreen").classList.add("hidden");
+        document.getElementById("adminPinError").classList.add("hidden");
+      } else {
+        document.getElementById("adminPinError").classList.remove("hidden");
+      }
+    }
+
+    function lockAdminScreen() {
+      sessionStorage.removeItem("nien_admin_auth");
+      const pinScreen = document.getElementById("adminPinScreen");
+      if (pinScreen) pinScreen.classList.remove("hidden");
+      const pinInput = document.getElementById("adminPinInput");
+      if (pinInput) pinInput.value = "";
+      const pinErr = document.getElementById("adminPinError");
+      if (pinErr) pinErr.classList.add("hidden");
+    }
+
+    // Tự động kiểm tra đăng nhập khi mở trang admin
+    if (sessionStorage.getItem("nien_admin_auth") === "true") {
+      const screen = document.getElementById("adminPinScreen");
+      if (screen) screen.classList.add("hidden");
+    }
+
+
     document.addEventListener("DOMContentLoaded", () => {
       saveState();
       renderKDSBoard();
