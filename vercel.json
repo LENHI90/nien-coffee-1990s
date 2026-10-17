@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "name": "nien-coffee-1990s",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/menu", "destination": "/index.html#menu-section" },
+    { "source": "/ban/:id", "destination": "/index.html?ban=:id" }
+  ]
+}

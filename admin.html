@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIÊN COFFEE | Bảng Quản Trị & KDS Pha Chế (Admin Dashboard)</title>
+  
+  <link rel="icon" type="image/jpeg" href="assets/logo/logo-nien.jpg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&family=Courier+Prime:wght@700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'nien-espresso': '#2B170E',
+            'nien-caramel': '#B85D19',
+            'nien-wood': '#8C6339',
+            'nien-beige': '#EADBC8',
+            'nien-cream': '#FAF6F0',
+            'nien-cream-card': '#FFFDF9',
+            'nien-moss': '#234E36',
+            'nien-vermilion': '#B53323',
+            'nien-ochre': '#D89828',
+          },
+          fontFamily: {
+            'serif-retro': ['"Playfair Display"', 'serif'],
+            'sans-viet': ['"Be Vietnam Pro"', 'sans-serif'],
+            'mono-retro': ['"Courier Prime"', 'monospace'],
+            'handwriting': ['"Caveat"', 'cursive'],
+          },
+          boxShadow: {
+            'vintage': '4px 4px 0px #2B170E',
+            'vintage-sm': '2px 2px 0px #2B170E',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF6F0;
+      color: #2B170E;
+      background-image: 
+        radial-gradient(#DEC8AF 0.85px, transparent 0.85px), 
+        radial-gradient(#EADBC8 0.85px, #FAF6F0 0.85px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+    .kanban-col {
+      min-height: calc(100vh - 240px);
+    }
+    @keyframes pulseNew {
+      0%, 100% { transform: scale(1); box-shadow: 4px 4px 0px #B53323; }
+      50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(181, 51, 35, 0.4); }
+    }
+    .order-new-card {
+      animation: pulseNew 2s infinite ease-in-out;
+    }
+    .red-seal {
+      border: 2px solid #B53323;
+      color: #B53323;
+      transform: rotate(-3deg);
+    }
+  </style>
+</head>
+
+<body class="font-sans-viet min-h-screen flex flex-col selection:bg-nien-caramel selection:text-white">
+
+  <!-- TOP HEADER QUẢN TRỊ -->
+  <header class="sticky top-0 z-50 bg-nien-espresso text-nien-beige border-b-2 border-nien-wood shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 group" title="Quay lại trang khách">
+          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-2 border-nien-caramel overflow-hidden p-0.5">
+            <img src="assets/logo/logo-nien.jpg" alt="Logo Niên" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-serif-retro text-xl font-black text-amber-200 tracking-wider">NIÊN COFFEE</span>
+              <span class="bg-nien-vermilion text-white text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase tracking-widest">Admin KDS</span>
+            </div>
+            <span class="text-[10px] text-nien-beige/70 block">Phân Hệ Quản Trị & Điều Phối Barista (1990s)</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Ca Trực & Trạng Thái Đồng Bộ -->
+      <div class="flex items-center gap-4 text-xs">
+        <div class="hidden sm:flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-lg border border-nien-wood/40">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>Ca trực: <strong>Thu Ngân & Barista Ca Sáng</strong></span>
+        </div>
+
+        <button onclick="testChimeSound()" class="bg-amber-800/80 hover:bg-amber-700 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-500/50 flex items-center gap-1.5 font-bold transition text-xs" title="Thử chuông ting-ting">
+          <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i>
+          <span>Thử Chuông Ting Ting</span>
+        </button>
+
+        <a href="index.html" target="_blank" class="bg-nien-moss hover:bg-nien-moss-hover text-white px-3.5 py-1.5 rounded-lg border border-emerald-400 flex items-center gap-1.5 font-bold transition text-xs shadow-sm">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          <span>Mở Trang Khách Hàng</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- TAB ĐIỀU HƯỚNG QUẢN TRỊ -->
+    <div class="bg-[#1F0E08] border-t border-nien-wood/30 px-4">
+      <div class="max-w-7xl mx-auto flex gap-2 sm:gap-4 overflow-x-auto py-2 text-xs font-bold">
+        <button onclick="switchAdminTab('kds')" id="tabBtn-kds" class="admin-tab-btn active px-4 py-2 rounded-lg flex items-center gap-2 transition bg-nien-caramel text-white shadow-sm">
+          <i data-lucide="coffee" class="w-4 h-4"></i>
+          <span>1. KDS Bàn Gọi Món</span>
+          <span id="badgePendingOrders" class="bg-nien-vermilion text-white text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+
+        <button onclick="switchAdminTab('postcards')" id="tabBtn-postcards" class="admin-tab-btn px-4 py-2 rounded-lg flex items-center gap-2 transition text-nien-beige/80 hover:text-white hover:bg-white/10">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+          <span>2. Bưu Thiếp & Thư Tay</span>
+          <span id="badgePendingPostcards" class="bg-amber-600 text-white text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+
+        <button onclick="switchAdminTab('stories')" id="tabBtn-stories" class="admin-tab-btn px-4 py-2 rounded-lg flex items-center gap-2 transition text-nien-beige/80 hover:text-white hover:bg-white/10">
+          <i data-lucide="feather" class="w-4 h-4"></i>
+          <span>3. Duyệt Bức Tường Ký Ức</span>
+          <span id="badgePendingStories" class="bg-amber-600 text-white text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+
+        <button onclick="switchAdminTab('members')" id="tabBtn-members" class="admin-tab-btn px-4 py-2 rounded-lg flex items-center gap-2 transition text-nien-beige/80 hover:text-white hover:bg-white/10">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span>4. Sổ Niên Kỷ & Điểm Thưởng</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+    <!-- ==================== TAB 1: KDS BARISTA KANBAN ==================== -->
+    <section id="panel-kds" class="admin-panel">
+      <!-- Toolbar KDS -->
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6 bg-nien-cream-card p-4 rounded-xl border-2 border-nien-wood shadow-sm">
+        <div>
+          <h2 class="font-serif-retro text-2xl font-black text-nien-espresso flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-6 h-6 text-nien-caramel"></i>
+            Bảng Điều Phối Pha Chế Barista (KDS Kanban)
+          </h2>
+          <p class="text-xs text-nien-wood mt-0.5">Đơn hàng tự động đồng bộ tức thì khi khách quét mã QR gọi món tại bàn hoặc đặt mang đi.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="simulateCustomerOrder()" class="bg-nien-vermilion hover:bg-nien-vermilion-hover text-white text-xs font-bold px-3.5 py-2 rounded-lg border border-red-300 shadow-vintage-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>+ Giả Lập Khách Quét QR Bàn Gọi Món</span>
+          </button>
+          <button onclick="clearCompletedOrders()" class="bg-neutral-200 hover:bg-neutral-300 text-neutral-700 text-xs font-bold px-3 py-2 rounded-lg transition" title="Xóa các đơn đã hoàn thành">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- KANBAN BOARD 3 CỘT -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- CỘT 1: ĐƠN MỚI CHỜ PHA CHẾ (ĐỎ SON) -->
+        <div class="bg-rose-50/60 rounded-2xl p-4 border-2 border-rose-300 shadow-sm flex flex-col kanban-col">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b-2 border-rose-200">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full bg-rose-600 animate-pulse"></span>
+              <h3 class="font-serif-retro font-black text-rose-900 text-base uppercase">1. Chờ Pha Chế</h3>
+            </div>
+            <span id="countColNew" class="font-mono-retro font-bold text-sm bg-rose-200 text-rose-900 px-2.5 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="colNewOrders" class="space-y-4 flex-grow overflow-y-auto">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- CỘT 2: ĐANG PHA CHẾ (VÀNG CARAMEL) -->
+        <div class="bg-amber-50/60 rounded-2xl p-4 border-2 border-amber-300 shadow-sm flex flex-col kanban-col">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b-2 border-amber-200">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full bg-amber-500 animate-spin"></span>
+              <h3 class="font-serif-retro font-black text-amber-900 text-base uppercase">2. Đang Pha Chế</h3>
+            </div>
+            <span id="countColBrewing" class="font-mono-retro font-bold text-sm bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="colBrewingOrders" class="space-y-4 flex-grow overflow-y-auto">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- CỘT 3: ĐÃ HOÀN THÀNH & PHỤC VỤ (XANH RÊU) -->
+        <div class="bg-emerald-50/60 rounded-2xl p-4 border-2 border-emerald-300 shadow-sm flex flex-col kanban-col">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b-2 border-emerald-200">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-700"></i>
+              <h3 class="font-serif-retro font-black text-emerald-900 text-base uppercase">3. Đã Phục Vụ</h3>
+            </div>
+            <span id="countColDone" class="font-mono-retro font-bold text-sm bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="colDoneOrders" class="space-y-4 flex-grow overflow-y-auto">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: HÀNG ĐỢI BƯU THIẾP BƯU ĐIỆN ==================== -->
+    <section id="panel-postcards" class="admin-panel hidden">
+      <div class="bg-nien-cream-card rounded-2xl p-6 border-2 border-nien-wood shadow-vintage mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-nien-wood/30">
+          <div>
+            <span class="text-xs font-bold text-nien-vermilion uppercase tracking-widest block mb-1">
+              Bưu Cục Niên Coffee • Tuyệt Đối Bảo Mật
+            </span>
+            <h2 class="font-serif-retro text-2xl font-black text-nien-espresso">
+              Hàng Đợi Bưu Thiếp & Thư Tay Cần Gửi Bưu Điện
+            </h2>
+            <p class="text-xs text-nien-wood mt-1">
+              Khách gửi thư kèm địa chỉ nhận tận nhà. Sau khi bấm <strong>"Xác Nhận Đã Gửi Bưu Điện"</strong>, hệ thống sẽ kích hoạt trigger <strong>TỰ ĐỘNG XÓA VĨNH VIỄN (PURGE)</strong> thông tin địa chỉ người nhận.
+            </p>
+          </div>
+          
+          <div class="bg-rose-50 border border-rose-300 p-3 rounded-xl text-xs text-rose-900 max-w-sm flex items-start gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-rose-700 flex-shrink-0 mt-0.5"></i>
+            <span>Cam kết danh dự: Quán Niên không lưu trữ địa chỉ nhà riêng của khách hàng sau khi giao bưu tá thành công.</span>
+          </div>
+        </div>
+
+        <!-- Danh sách bưu thiếp -->
+        <div id="postcardsListContainer" class="mt-6 space-y-4">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: DUYỆT BỨC TƯỜNG KÝ ỨC ==================== -->
+    <section id="panel-stories" class="admin-panel hidden">
+      <div class="bg-nien-cream-card rounded-2xl p-6 border-2 border-nien-wood shadow-vintage mb-6">
+        <div class="flex items-center justify-between pb-4 border-b border-nien-wood/30">
+          <div>
+            <span class="text-xs font-bold text-nien-caramel uppercase tracking-widest block mb-1">
+              Kiểm Duyệt Nội Dung Cộng Đồng
+            </span>
+            <h2 class="font-serif-retro text-2xl font-black text-nien-espresso">
+              Duyệt Bài Viết Bức Tường Ký Ức
+            </h2>
+            <p class="text-xs text-nien-wood mt-1">
+              Khi bạn bấm <strong>"Duyệt & Tặng +50 Điểm"</strong>, bài viết sẽ xuất hiện công khai trên Bức Tường Ký Ức và tài khoản khách nhận ngay 50 Điểm Niên.
+            </p>
+          </div>
+          <span id="pendingStoriesCountText" class="text-xs font-mono font-bold bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-300">
+            0 bài chờ duyệt
+          </span>
+        </div>
+
+        <div id="adminStoriesList" class="mt-6 grid md:grid-cols-2 gap-6">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: QUẢN LÝ SỔ NIÊN KỶ ==================== -->
+    <section id="panel-members" class="admin-panel hidden">
+      <div class="bg-nien-cream-card rounded-2xl p-6 border-2 border-nien-wood shadow-vintage">
+        <div class="pb-4 border-b border-nien-wood/30 mb-6">
+          <span class="text-xs font-bold text-nien-moss uppercase tracking-widest block mb-1">
+            Chương Trình Khách Hàng Thân Thiết (Loyalty CRM)
+          </span>
+          <h2 class="font-serif-retro text-2xl font-black text-nien-espresso">
+            Danh Sách Sổ Niên Kỷ & Điểm Thưởng
+          </h2>
+          <p class="text-xs text-nien-wood mt-1">
+            Công thức chuẩn: <strong>10.000đ = 20 Điểm Niên</strong> • <strong>500 Điểm Niên = Voucher 15.000đ</strong> • Điểm tích lũy không có thời hạn hết hạn.
+          </p>
+        </div>
+
+        <!-- Bảng danh sách thành viên -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-nien-espresso">
+            <thead class="bg-nien-beige/50 text-nien-espresso font-bold uppercase border-b border-nien-wood/30">
+              <tr>
+                <th class="p-3">Họ Tên Chủ Sổ</th>
+                <th class="p-3">Số Điện Thoại</th>
+                <th class="p-3">Hạng Thành Viên</th>
+                <th class="p-3">Số Dư Điểm Niên</th>
+                <th class="p-3">Quyền Đổi Voucher</th>
+                <th class="p-3 text-right">Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="adminMembersTableBody" class="divide-y divide-nien-wood/20">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL XEM BẢN IN BƯU THIẾP KRAFT -->
+  <div id="printPostcardModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#FAF6F0] rounded-2xl max-w-xl w-full p-6 border-4 border-nien-wood shadow-vintage relative">
+      <button onclick="closePrintModal()" class="absolute top-4 right-4 text-nien-wood hover:text-nien-espresso p-1">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-nien-wood/40">
+        <i data-lucide="printer" class="w-5 h-5 text-nien-caramel"></i>
+        <h3 class="font-serif-retro text-xl font-black text-nien-espresso">Bản In Bưu Thiếp Giấy Kraft (Chuẩn Bưu Cục)</h3>
+      </div>
+
+      <div id="printPostcardContent" class="bg-[#FFFDF9] p-5 rounded-xl border-2 border-dashed border-nien-wood/60 shadow-inner mb-5">
+        <!-- Content injected by JS -->
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button onclick="window.print()" class="bg-nien-espresso hover:bg-black text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+          <i data-lucide="printer" class="w-4 h-4"></i> In Bưu Thiếp Giấy Thật
+        </button>
+        <button onclick="closePrintModal()" class="bg-neutral-200 hover:bg-neutral-300 text-neutral-800 px-4 py-2 rounded-lg text-xs font-bold transition">
+          Đóng Lại
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC REALTIME ADMIN & KDS -->
+  <script>
+    // ==================== TẠO ÂM THANH CHUÔNG TING TING BẰNG WEB AUDIO API ====================
+    let audioCtx = null;
+    function playDingDongChime() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        
+        const now = audioCtx.currentTime;
+        // Tone 1: Ting (880Hz - A5)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(880, now);
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.8);
+
+        // Tone 2: Dong (587.33Hz - D5)
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = "sine";
+        osc2.frequency.setValueAtTime(587.33, now + 0.25);
+        gain2.gain.setValueAtTime(0.3, now + 0.25);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.25);
+        osc2.stop(now + 1.2);
+      } catch (e) {
+        console.log("Audio not supported or blocked", e);
+      }
+    }
+
+    function testChimeSound() {
+      playDingDongChime();
+    }
+
+    // ==================== KHỞI TẠO DỮ LIỆU CHUẨN ====================
+    const DEFAULT_ORDERS = [
+      {
+        id: "NIEN-B03-1995",
+        tableNumber: "Bàn 03",
+        timestamp: "10:15 - Hôm nay",
+        customerName: "Nguyễn Hoài Nam",
+        customerPhone: "0987.654.321",
+        status: "new", // 'new' | 'brewing' | 'done'
+        items: [
+          { name: "Cà Phê Trứng Hà Nội", quantity: 2, price: 38000, note: "Đánh bông mịn, ít ngọt" },
+          { name: "Mì Tôm Hai Con Tôm", quantity: 1, price: 25000, note: "Trứng chần lòng đào" }
+        ],
+        totalAmount: 101000,
+        paymentMethod: "VietQR Đã Thanh Toán Tự Động",
+        pointsEarned: 200
+      },
+      {
+        id: "NIEN-B05-2041",
+        tableNumber: "Bàn 05",
+        timestamp: "10:05 - Hôm nay",
+        customerName: "Lê Minh Thảo",
+        customerPhone: "0912.333.444",
+        status: "brewing",
+        items: [
+          { name: "Sâm Dứa Sữa Sài Gòn 1995", quantity: 2, price: 29000, note: "Nhiều đá" },
+          { name: "Đá Bào Siro Tuổi Thơ", quantity: 1, price: 22000, note: "Siro dâu + dứa" }
+        ],
+        totalAmount: 80000,
+        paymentMethod: "VietQR Đã Thanh Toán Tự Động",
+        pointsEarned: 160
+      },
+      {
+        id: "NIEN-MANGVE-1088",
+        tableNumber: "Mang Về (Take-away)",
+        timestamp: "09:40 - Hôm nay",
+        customerName: "Trần Quốc Bảo",
+        customerPhone: "0903.888.999",
+        status: "done",
+        items: [
+          { name: "Cà Phê Phin Bắp Mộc", quantity: 3, price: 28000, note: "Mang về ly giấy hoài niệm" }
+        ],
+        totalAmount: 84000,
+        paymentMethod: "Tiền mặt tại quầy",
+        pointsEarned: 160
+      }
+    ];
+
+    const DEFAULT_POSTCARDS = [
+      {
+        id: 1,
+        senderName: "Nguyễn Hoài Nam",
+        senderPhone: "0987.654.321",
+        recipientName: "Phạm Thúy Hằng",
+        recipientPhone: "0934.555.666",
+        recipientAddress: "Số 15 phố Hàng Đào, Q. Hoàn Kiếm, Hà Nội",
+        content: "Gửi Hằng, cảm ơn bạn vì buổi sáng mùa thu năm ấy bên quán cóc góc phố. Niên khiến mình nhớ lại thời chúng mình còn chia nhau gói mì tôm và que cà rem 200 đồng. Mong bạn luôn bình an!",
+        date: "16.10.1995",
+        isDispatched: false,
+        statusText: "Chờ In & Giao Bưu Tá"
+      },
+      {
+        id: 2,
+        senderName: "Hoàng Yến",
+        senderPhone: "0905.123.456",
+        recipientName: "Bà Ngoại Yêu Quý",
+        recipientPhone: "0243.825.xxxx",
+        recipientAddress: "Số 42 ngõ Tạm Thương, Hàng Bông, Hà Nội",
+        content: "Bà ơi, hôm nay con ngồi ở Góc Không Wifi, uống cốc trà sen giống hệt ấm trà bà hay ủ mỗi sáng sớm. Con thương bà nhiều!",
+        date: "15.10.1995",
+        isDispatched: true,
+        statusText: "ĐÃ GỬI BƯU ĐIỆN (ĐÃ XÓA ĐỊA CHỈ BẢO MẬT)"
+      }
+    ];
+
+    const DEFAULT_STORIES = [
+      {
+        id: 101,
+        author: "Trần Quốc Tuấn",
+        year: "1994",
+        title: "Chiếc Máy Cassette Chạy Băng Từ Của Bố",
+        content: "Năm 1994, bố gom góp tiền thưởng Tết mua chiếc đài cassette Sony màu đỏ. Cả xóm xúm lại nghe ké băng nhạc Chế Linh, Khánh Ly. Mỗi lần rối băng là phải lấy chiếc bút bi Thiên Long luồn vào bánh răng để quay lại. Đến giờ ngồi ở Niên, nghe tiếng xè xè của đầu từ băng cassette mà cay cay sống mũi.",
+        status: "pending"
+      },
+      {
+        id: 102,
+        author: "Bùi Thị Minh",
+        year: "1998",
+        title: "Bát Đá Bào Siro 500 Đồng Cổng Trường",
+        content: "Tan học hè năm 1998, lũ bạn túm tụm quanh bác bán đá bào. Bác dùng chiếc bàn bào gỗ bào đá xoèn xoẹt, rưới hai muôi siro đỏ xanh ngọt lịm. Hôm nay được ăn lại ở Niên đúng vị ký ức xưa.",
+        status: "pending"
+      }
+    ];
+
+    const DEFAULT_MEMBERS = [
+      { name: "Nguyễn Hoài Nam", phone: "0987.654.321", tier: "Bạn Thân Thiết (Cố Tri)", points: 640 },
+      { name: "Lê Minh Thảo", phone: "0912.333.444", tier: "Khách Quen (Mộc Mạc)", points: 380 },
+      { name: "Trần Quốc Bảo", phone: "0903.888.999", tier: "Tri Kỷ Niên (Niên Kỷ)", points: 1250 },
+      { name: "Hoàng Lan", phone: "0977.111.222", tier: "Người Mới Ghé (Sơ Ngộ)", points: 140 }
+    ];
+
+    // Lấy dữ liệu từ localStorage hoặc dùng mặc định
+    let adminOrders = JSON.parse(localStorage.getItem('nien_shared_orders')) || DEFAULT_ORDERS;
+    let adminPostcards = JSON.parse(localStorage.getItem('nien_shared_postcards')) || DEFAULT_POSTCARDS;
+    let adminStories = JSON.parse(localStorage.getItem('nien_shared_stories')) || DEFAULT_STORIES;
+    let adminMembers = JSON.parse(localStorage.getItem('nien_shared_members')) || DEFAULT_MEMBERS;
+
+    function saveState() {
+      localStorage.setItem('nien_shared_orders', JSON.stringify(adminOrders));
+      localStorage.setItem('nien_shared_postcards', JSON.stringify(adminPostcards));
+      localStorage.setItem('nien_shared_stories', JSON.stringify(adminStories));
+      localStorage.setItem('nien_shared_members', JSON.stringify(adminMembers));
+    }
+
+    // LẮNG NGHE SỰ KIỆN TỪ TAB KHÁCH HÀNG (INDEX.HTML)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'nien_order_event' || e.key === 'nien_shared_orders') {
+        adminOrders = JSON.parse(localStorage.getItem('nien_shared_orders')) || adminOrders;
+        playDingDongChime();
+        renderKDSBoard();
+      }
+      if (e.key === 'nien_shared_postcards') {
+        adminPostcards = JSON.parse(localStorage.getItem('nien_shared_postcards')) || adminPostcards;
+        renderPostcardsTab();
+      }
+      if (e.key === 'nien_shared_stories') {
+        adminStories = JSON.parse(localStorage.getItem('nien_shared_stories')) || adminStories;
+        renderStoriesTab();
+      }
+    });
+
+    // ==================== CHUYỂN TAB QUẢN TRỊ ====================
+    function switchAdminTab(tabName) {
+      document.querySelectorAll('.admin-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.admin-tab-btn').forEach(b => {
+        b.classList.remove('bg-nien-caramel', 'text-white', 'active');
+        b.classList.add('text-nien-beige/80');
+      });
+
+      const activeBtn = document.getElementById(`tabBtn-${tabName}`);
+      const activePanel = document.getElementById(`panel-${tabName}`);
+      if (activeBtn && activePanel) {
+        activeBtn.classList.add('bg-nien-caramel', 'text-white', 'active');
+        activeBtn.classList.remove('text-nien-beige/80');
+        activePanel.classList.remove('hidden');
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ==================== TAB 1: RENDER KDS KANBAN ====================
+    function renderKDSBoard() {
+      const colNew = document.getElementById("colNewOrders");
+      const colBrewing = document.getElementById("colBrewingOrders");
+      const colDone = document.getElementById("colDoneOrders");
+
+      const newOrders = adminOrders.filter(o => o.status === 'new');
+      const brewingOrders = adminOrders.filter(o => o.status === 'brewing');
+      const doneOrders = adminOrders.filter(o => o.status === 'done');
+
+      document.getElementById("countColNew").innerText = newOrders.length;
+      document.getElementById("countColBrewing").innerText = brewingOrders.length;
+      document.getElementById("countColDone").innerText = doneOrders.length;
+      document.getElementById("badgePendingOrders").innerText = newOrders.length;
+
+      // CỘT 1: ĐƠN MỚI
+      colNew.innerHTML = newOrders.length === 0 ? `
+        <div class="text-center py-12 text-rose-800/60 text-xs italic">
+          Không có đơn hàng mới nào cần pha chế.
+        </div>
+      ` : newOrders.map(o => `
+        <div class="bg-white rounded-xl p-4 border-2 border-rose-400 shadow-vintage order-new-card transition">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-rose-100">
+            <span class="font-mono-retro font-black text-rose-700 text-lg">${o.tableNumber}</span>
+            <span class="text-[11px] font-mono text-neutral-500">${o.timestamp}</span>
+          </div>
+
+          <div class="text-xs mb-3">
+            <div class="font-bold text-nien-espresso">${o.customerName} <span class="text-neutral-500 font-normal">(${o.customerPhone})</span></div>
+            <div class="text-[11px] text-emerald-800 font-semibold mt-0.5">${o.paymentMethod}</div>
+          </div>
+
+          <!-- Danh sách món -->
+          <div class="bg-rose-50/50 p-2.5 rounded-lg border border-rose-200/60 space-y-1.5 mb-3 text-xs">
+            ${o.items.map(item => `
+              <div class="flex justify-between items-start">
+                <span class="font-bold text-nien-espresso">
+                  <span class="text-rose-700 font-black">${item.quantity}x</span> ${item.name}
+                  ${item.note ? `<span class="block text-[10px] text-nien-wood italic">Ghi chú: ${item.note}</span>` : ''}
+                </span>
+                <span class="font-mono text-[11px] text-neutral-600">${(item.price * item.quantity).toLocaleString('vi-VN')}đ</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="flex items-center justify-between text-xs pt-1 border-t border-rose-100 mb-3">
+            <span class="text-neutral-500">Mã đơn: <strong class="font-mono">${o.id}</strong></span>
+            <span class="font-bold text-rose-800 font-mono text-sm">${o.totalAmount.toLocaleString('vi-VN')}đ</span>
+          </div>
+
+          <button onclick="moveOrderStatus('${o.id}', 'brewing')" class="w-full bg-nien-caramel hover:bg-nien-caramel-hover text-white py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm">
+            <span>Bắt Đầu Pha Chế</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+
+      // CỘT 2: ĐANG PHA CHẾ
+      colBrewing.innerHTML = brewingOrders.length === 0 ? `
+        <div class="text-center py-12 text-amber-800/60 text-xs italic">
+          Hiện quầy bar đang trống món.
+        </div>
+      ` : brewingOrders.map(o => `
+        <div class="bg-white rounded-xl p-4 border-2 border-amber-400 shadow-sm transition">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-amber-100">
+            <span class="font-mono-retro font-black text-amber-800 text-lg">${o.tableNumber}</span>
+            <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <i data-lucide="flame" class="w-3 h-3 text-amber-600"></i> Đang làm
+            </span>
+          </div>
+
+          <div class="text-xs mb-3">
+            <div class="font-bold text-nien-espresso">${o.customerName}</div>
+            <div class="text-[11px] text-neutral-500 font-mono">${o.id} • ${o.timestamp}</div>
+          </div>
+
+          <!-- Danh sách món -->
+          <div class="bg-amber-50/50 p-2.5 rounded-lg border border-amber-200/60 space-y-1.5 mb-3 text-xs">
+            ${o.items.map(item => `
+              <div class="flex justify-between items-start">
+                <span class="font-bold text-nien-espresso">
+                  <span class="text-amber-800 font-black">${item.quantity}x</span> ${item.name}
+                  ${item.note ? `<span class="block text-[10px] text-nien-wood italic">Ghi chú: ${item.note}</span>` : ''}
+                </span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="flex gap-2">
+            <button onclick="moveOrderStatus('${o.id}', 'new')" class="bg-neutral-100 hover:bg-neutral-200 text-neutral-700 px-3 py-2 rounded-lg text-xs font-bold transition" title="Lùi lại">
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="moveOrderStatus('${o.id}', 'done')" class="flex-grow bg-emerald-700 hover:bg-emerald-800 text-white py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm">
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+              <span>Hoàn Thành & Mang Ra Bàn</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // CỘT 3: ĐÃ PHỤC VỤ
+      colDone.innerHTML = doneOrders.length === 0 ? `
+        <div class="text-center py-12 text-emerald-800/60 text-xs italic">
+          Chưa có đơn hàng nào hoàn tất trong ca.
+        </div>
+      ` : doneOrders.map(o => `
+        <div class="bg-white/80 rounded-xl p-3.5 border border-emerald-300 opacity-90 text-xs transition">
+          <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-neutral-100">
+            <span class="font-mono-retro font-bold text-emerald-900">${o.tableNumber}</span>
+            <span class="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
+              <i data-lucide="check-check" class="w-3 h-3"></i> Đã Phục Vụ
+            </span>
+          </div>
+          <div class="text-neutral-600 text-[11px] mb-1">
+            Khách: <strong>${o.customerName}</strong> • ${o.totalAmount.toLocaleString('vi-VN')}đ
+          </div>
+          <div class="text-[10px] text-neutral-400 font-mono">
+            Mã: ${o.id} • ${o.timestamp}
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function moveOrderStatus(orderId, newStatus) {
+      const order = adminOrders.find(o => o.id === orderId);
+      if (order) {
+        order.status = newStatus;
+        saveState();
+        renderKDSBoard();
+      }
+    }
+
+    function simulateCustomerOrder() {
+      const tableList = ["Bàn 01", "Bàn 02", "Bàn 04", "Bàn 07", "Bàn 12"];
+      const randomTable = tableList[Math.floor(Math.random() * tableList.length)];
+      const randomId = "NIEN-" + randomTable.replace(" ", "") + "-" + Math.floor(1000 + Math.random() * 9000);
+
+      const newOrder = {
+        id: randomId,
+        tableNumber: randomTable,
+        timestamp: "Vừa xong",
+        customerName: "Khách Ghé Quán 90s",
+        customerPhone: "09" + Math.floor(10000000 + Math.random() * 90000000),
+        status: "new",
+        items: [
+          { name: "Cà Phê Muối Xứ Huế", quantity: 1, price: 35000, note: "Kem muối béo ngậy" },
+          { name: "Bánh Chuối Nướng Cốt Dừa", quantity: 1, price: 20000, note: "Ăn nóng" }
+        ],
+        totalAmount: 55000,
+        paymentMethod: "VietQR Đã Thanh Toán Tự Động",
+        pointsEarned: 100
+      };
+
+      adminOrders.unshift(newOrder);
+      saveState();
+      playDingDongChime();
+      renderKDSBoard();
+    }
+
+    function clearCompletedOrders() {
+      if (confirm("Bạn có muốn dọn dẹp các đơn hàng đã phục vụ xong trong ca không?")) {
+        adminOrders = adminOrders.filter(o => o.status !== 'done');
+        saveState();
+        renderKDSBoard();
+      }
+    }
+
+    // ==================== TAB 2: HÀNG ĐỢI BƯU THIẾP ====================
+    function renderPostcardsTab() {
+      const container = document.getElementById("postcardsListContainer");
+      const pendingPostcards = adminPostcards.filter(p => !p.isDispatched);
+      document.getElementById("badgePendingPostcards").innerText = pendingPostcards.length;
+
+      container.innerHTML = adminPostcards.map(p => `
+        <div class="bg-white rounded-xl p-5 border-2 border-nien-wood/40 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div class="flex-grow space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold text-nien-wood">Bưu thiếp #${p.id} • Ngày: ${p.date}</span>
+              ${p.isDispatched ? `
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                  <i data-lucide="shield-check" class="w-3 h-3"></i> ĐÃ GỬI BƯU ĐIỆN & ĐÃ XÓA SẠCH ĐỊA CHỈ
+                </span>
+              ` : `
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
+                  <i data-lucide="clock" class="w-3 h-3"></i> Chờ In & Gửi Bưu Điện
+                </span>
+              `}
+            </div>
+
+            <h4 class="font-serif-retro text-lg font-bold text-nien-espresso">
+              Người gửi: <strong>${p.senderName}</strong> ➔ Gửi đến: <strong>${p.recipientName}</strong>
+            </h4>
+
+            <div class="text-xs text-nien-wood">
+              ${p.isDispatched ? `
+                <span class="text-emerald-700 italic font-mono">[ĐÃ XÓA BẢO MẬT: Địa chỉ và SĐT người nhận đã được hủy vĩnh viễn khỏi hệ thống theo cam kết]</span>
+              ` : `
+                <span>Địa chỉ nhận: <strong class="text-nien-espresso">${p.recipientAddress}</strong> (SĐT: ${p.recipientPhone})</span>
+              `}
+            </div>
+
+            <p class="font-handwriting text-xl text-nien-espresso pt-2 italic">
+              "${p.content.substring(0, 100)}..."
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0 w-full md:w-auto">
+            <button onclick="openPrintModal(${p.id})" class="bg-nien-cream-card hover:bg-nien-beige text-nien-espresso border border-nien-wood px-3.5 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              <span>Xem Bản In Thiệp</span>
+            </button>
+
+            ${!p.isDispatched ? `
+              <button onclick="dispatchPostcard(${p.id})" class="bg-nien-vermilion hover:bg-nien-vermilion-hover text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-sm border border-red-300">
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <span>XÁC NHẬN ĐÃ GỬI BƯU ĐIỆN</span>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function dispatchPostcard(id) {
+      const p = adminPostcards.find(item => item.id === id);
+      if (p) {
+        if (confirm(`Xác nhận bưu tá đã nhận thiệp gửi đến "${p.recipientName}"?\n\nTheo cam kết bảo mật, thông tin địa chỉ và số điện thoại người nhận sẽ lập tức được XÓA VĨNH VIỄN khỏi máy chủ!`)) {
+          p.isDispatched = true;
+          p.recipientAddress = "[ĐÃ XÓA VĨNH VIỄN - BẢO MẬT TUYỆT ĐỐI]";
+          p.recipientPhone = "[ĐÃ XÓA]";
+          p.statusText = "ĐÃ GỬI BƯU ĐIỆN (ĐÃ XÓA ĐỊA CHỈ BẢO MẬT)";
+          saveState();
+          renderPostcardsTab();
+          alert("✓ ĐÃ CẬP NHẬT TRẠNG THÁI VÀ XÓA SẠCH ĐỊA CHỈ NGƯỜI NHẬN THÀNH CÔNG!");
+        }
+      }
+    }
+
+    function openPrintModal(id) {
+      const p = adminPostcards.find(item => item.id === id);
+      if (!p) return;
+
+      const container = document.getElementById("printPostcardContent");
+      container.innerHTML = `
+        <div class="flex justify-between items-start pb-3 border-b border-nien-wood/40">
+          <div>
+            <span class="text-[10px] font-bold text-nien-wood uppercase">Bưu Cục Niên Coffee 1995</span>
+            <h4 class="font-serif-retro text-lg font-bold text-nien-espresso">Gửi đến: ${p.recipientName}</h4>
+            <p class="text-xs text-nien-wood mt-0.5">${p.recipientAddress}</p>
+          </div>
+          <div class="p-2 border-2 border-dashed border-rose-700 bg-rose-50 text-center text-rose-800 text-[10px] font-bold">
+            TEM BƯU ĐIỆN<br>★ 400 ĐỒNG ★<br>HOA SEN
+          </div>
+        </div>
+
+        <div class="py-4 font-handwriting text-2xl leading-relaxed text-nien-espresso text-justify">
+          ${p.content}
+        </div>
+
+        <div class="flex justify-between items-end pt-3 border-t border-dashed border-nien-wood/40">
+          <div class="red-seal px-2 py-0.5 text-[9px] font-mono font-bold uppercase">
+            BƯU CỤC NIÊN<br>MIỄN CƯỚC 100%
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-nien-wood block">Người gửi:</span>
+            <span class="font-handwriting text-2xl font-bold text-nien-espresso">${p.senderName}</span>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("printPostcardModal").classList.remove("hidden");
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closePrintModal() {
+      document.getElementById("printPostcardModal").classList.add("hidden");
+    }
+
+    // ==================== TAB 3: DUYỆT BÀI BỨC TƯỜNG KÝ ỨC ====================
+    function renderStoriesTab() {
+      const container = document.getElementById("adminStoriesList");
+      const pendingList = adminStories.filter(s => s.status === 'pending');
+      document.getElementById("badgePendingStories").innerText = pendingList.length;
+      document.getElementById("pendingStoriesCountText").innerText = `${pendingList.length} bài chờ duyệt`;
+
+      container.innerHTML = pendingList.length === 0 ? `
+        <div class="col-span-2 text-center py-12 text-neutral-500 italic text-xs">
+          Tất cả các mẩu chuyện ký ức đã được duyệt hoàn tất.
+        </div>
+      ` : pendingList.map(s => `
+        <div class="bg-white rounded-xl p-5 border-2 border-nien-wood/40 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs text-neutral-500 mb-2">
+              <span class="font-bold text-nien-espresso">Tác giả: ${s.author}</span>
+              <span class="font-mono bg-nien-beige/60 px-2 py-0.5 rounded">Năm ${s.year}</span>
+            </div>
+            <h4 class="font-serif-retro text-lg font-bold text-nien-espresso mb-2">"${s.title}"</h4>
+            <p class="text-xs text-nien-wood leading-relaxed text-justify mb-4">
+              ${s.content}
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 pt-3 border-t border-nien-wood/20">
+            <button onclick="approveStoryAdmin(${s.id})" class="flex-grow bg-emerald-700 hover:bg-emerald-800 text-white py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Duyệt & Tặng +50 Điểm</span>
+            </button>
+            <button onclick="rejectStoryAdmin(${s.id})" class="bg-neutral-100 hover:bg-rose-100 text-rose-700 py-2 px-3 rounded-lg text-xs font-bold transition">
+              Từ Chối
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function approveStoryAdmin(storyId) {
+      const story = adminStories.find(s => s.id === storyId);
+      if (story) {
+        story.status = "approved";
+        saveState();
+        renderStoriesTab();
+        alert(`✓ ĐÃ DUYỆT BÀI THÀNH CÔNG!\nCâu chuyện "${story.title}" đã được xuất bản lên Bức Tường Ký Ức. Tác giả ${story.author} nhận ngay +50 Điểm Niên!`);
+      }
+    }
+
+    function rejectStoryAdmin(storyId) {
+      if (confirm("Bạn có chắc chắn muốn từ chối bài viết này không?")) {
+        adminStories = adminStories.filter(s => s.id !== storyId);
+        saveState();
+        renderStoriesTab();
+      }
+    }
+
+    // ==================== TAB 4: QUẢN LÝ SỔ NIÊN KỶ ====================
+    function renderMembersTab() {
+      const tbody = document.getElementById("adminMembersTableBody");
+      tbody.innerHTML = adminMembers.map(m => `
+        <tr class="hover:bg-amber-50/50 transition">
+          <td class="p-3 font-bold text-nien-espresso">${m.name}</td>
+          <td class="p-3 font-mono text-neutral-600">${m.phone}</td>
+          <td class="p-3">
+            <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-amber-300">
+              ${m.tier}
+            </span>
+          </td>
+          <td class="p-3 font-mono font-bold text-rose-800 text-sm">${m.points} Điểm</td>
+          <td class="p-3">
+            ${m.points >= 500 ? `
+              <span class="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Đủ điều kiện đổi Voucher 15.000đ
+              </span>
+            ` : `
+              <span class="text-neutral-400 text-[11px]">Còn thiếu ${500 - m.points} điểm để đổi</span>
+            `}
+          </td>
+          <td class="p-3 text-right">
+            <button onclick="alert('Đã đồng bộ lịch sử giao dịch của thành viên ${m.name}')" class="text-nien-caramel hover:underline font-bold text-xs">
+              Xem Lịch Sử
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ==================== KHỞI CHẠY ====================
+    document.addEventListener("DOMContentLoaded", () => {
+      saveState();
+      renderKDSBoard();
+      renderPostcardsTab();
+      renderStoriesTab();
+      renderMembersTab();
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+
+</body>
+</html>
